@@ -12,11 +12,11 @@ from app.pipelines.roadmap.schemas import EmployeeProfile
 
 
 class RoadmapState(TypedDict):
+    prompt: str
     profile: EmployeeProfile
-    analysis: dict
     sub_goals: dict
     curriculum: dict
-    final_roadmap: dict
+    final_roadmap: str
 
 
 def build_roadmap_graph() -> StateGraph:
@@ -27,8 +27,8 @@ def build_roadmap_graph() -> StateGraph:
 
     graph = StateGraph(RoadmapState)
 
-    graph.add_node("profile_analyst", lambda s: {"analysis": analyst.run(s["profile"])})
-    graph.add_node("goal_strategist", lambda s: {"sub_goals": strategist.run(s["profile"], s["analysis"])})
+    graph.add_node("profile_analyst", lambda s: {"profile": analyst.run(s["prompt"])})
+    graph.add_node("goal_strategist", lambda s: {"sub_goals": strategist.run(s["profile"])})
     graph.add_node("curriculum_designer", lambda s: {"curriculum": designer.run(s["sub_goals"], s["profile"])})
     graph.add_node("personalizer", lambda s: {"final_roadmap": personalizer.run(s["curriculum"], s["profile"])})
 
