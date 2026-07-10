@@ -13,7 +13,10 @@
       "Bash(mv /Users/shamikbera/Documents/Projects/cb-project/backend/__init__.py /Users/shamikbera/Documents/Projects/cb-project/backend/app/__init__.py)",
       "Bash(mv /Users/shamikbera/Documents/Projects/cb-project/backend/main.py /Users/shamikbera/Documents/Projects/cb-project/backend/app/main.py)",
       "Bash(mv /Users/shamikbera/Documents/Projects/cb-project/backend/config.py /Users/shamikbera/Documents/Projects/cb-project/backend/app/config.py)",
-      "Bash(mv /Users/shamikbera/Documents/Projects/cb-project/backend/features /Users/shamikbera/Documents/Projects/cb-project/backend/app/features)"
+      "Bash(mv /Users/shamikbera/Documents/Projects/cb-project/backend/features /Users/shamikbera/Documents/Projects/cb-project/backend/app/features)",
+      "mcp__notion__notion-update-page",
+      "mcp__context7__resolve-library-id",
+      "mcp__context7__query-docs"
     ]
   }
 }
