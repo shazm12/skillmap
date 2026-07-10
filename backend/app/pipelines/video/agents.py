@@ -1,4 +1,4 @@
-from app.features.video.schemas import Storyboard, VideoRequest
+from app.pipelines.video.schemas import Storyboard, VideoRequest
 
 
 class ScriptWriterAgent:

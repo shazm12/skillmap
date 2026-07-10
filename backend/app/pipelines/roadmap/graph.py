@@ -2,13 +2,13 @@ from typing import TypedDict
 
 from langgraph.graph import END, StateGraph
 
-from app.features.roadmap.agents import (
+from app.pipelines.roadmap.agents import (
     CurriculumDesignerAgent,
     GoalStrategistAgent,
     PersonalizerAgent,
     ProfileAnalystAgent,
 )
-from app.features.roadmap.schemas import EmployeeProfile
+from app.pipelines.roadmap.schemas import EmployeeProfile
 
 
 class RoadmapState(TypedDict):
