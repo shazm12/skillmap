@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(claude mcp:*)",
+      "mcp__notion__notion-search",
+      "mcp__notion__notion-fetch",
+      "Bash(which uv:*)",
+      "Bash(uv init:*)",
+      "Bash(uv sync:*)",
+      "Bash(uv run:*)"
+    ]
+  }
+}
