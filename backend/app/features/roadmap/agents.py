@@ -1,4 +1,4 @@
-from backend.features.roadmap.schemas import EmployeeProfile
+from app.features.roadmap.schemas import EmployeeProfile
 
 
 class ProfileAnalystAgent:

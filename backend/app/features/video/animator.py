@@ -2,7 +2,7 @@
 Animated slide renderer using Pillow + MoviePy.
 Generates per-scene frames and compiles them into a silent .mp4.
 """
-from backend.features.video.schemas import Storyboard
+from app.features.video.schemas import Storyboard
 
 
 class SlideAnimator:

@@ -3,14 +3,14 @@ from typing import TypedDict
 
 from langgraph.graph import END, StateGraph
 
-from backend.features.video.agents import (
+from app.features.video.agents import (
     AnimatorAgent,
     EditorAgent,
     NarratorAgent,
     ScriptWriterAgent,
     StoryboardAgent,
 )
-from backend.features.video.schemas import Storyboard, VideoRequest
+from app.features.video.schemas import Storyboard, VideoRequest
 
 
 class VideoState(TypedDict):
