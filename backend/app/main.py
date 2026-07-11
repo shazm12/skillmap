@@ -1,15 +1,30 @@
+import asyncio
+import sys
+from contextlib import asynccontextmanager
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from contextlib import asynccontextmanager
+
+from app.config import dev_settings as settings
 from app.pipelines.roadmap.graph import build_roadmap_graph
 from app.routes.roadmap_router import router as roadmap_router
 
-from app.config import dev_settings as settings
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     app.state.roadmap_graph = build_roadmap_graph()
+
+    agent_proc = await asyncio.create_subprocess_exec(
+        sys.executable,
+        "app/pipelines/voice_agent/agent.py",
+        "dev",
+    )
+    app.state.agent_process = agent_proc
+
     yield
+
+    agent_proc.terminate()
+    await agent_proc.wait()
 
 app = FastAPI(
     title=settings.APP_NAME,
