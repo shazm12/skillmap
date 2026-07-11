@@ -17,6 +17,7 @@ dependencies = [
     "soundfile==0.12.1",
     "numpy>=2.0.2",
     "python-dotenv==1.0.1",
+    "livekit-agents[cartesia,deepgram,groq,silero]>=1.6.5",
 ]
 
 [dependency-groups]
