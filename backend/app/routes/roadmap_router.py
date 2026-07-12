@@ -1,4 +1,5 @@
 import json
+import logging
 
 from fastapi import APIRouter, Request
 from fastapi.responses import StreamingResponse
@@ -7,6 +8,7 @@ from app.pipelines.roadmap.agents import RoadmapAgentError
 from app.pipelines.roadmap.schemas import RoadmapRequest
 
 router = APIRouter(prefix="/roadmap", tags=["roadmap"])
+logger = logging.getLogger(__name__)
 
 
 @router.post("/generate")
@@ -40,9 +42,11 @@ async def generate_roadmap(request: RoadmapRequest, req: Request):
             yield "data: [DONE]\n\n"
 
         except RoadmapAgentError as e:
+            logger.exception("Agent pipeline failed — prompt: %r", request.prompt)
             yield f"data: {json.dumps({'error': str(e)})}\n\n"
 
         except Exception as e:
+            logger.exception("Unexpected error in roadmap stream — prompt: %r", request.prompt)
             yield f"data: {json.dumps({'error': f'Unexpected error: {str(e)}'})}\n\n"
 
     return StreamingResponse(token_stream(), media_type="text/event-stream")
