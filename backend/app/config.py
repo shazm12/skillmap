@@ -15,10 +15,7 @@ class DevSettings(BaseSettings):
     DEEPGRAM_API_KEY: str = ""
     CARTESIA_API_KEY: str = ""
 
-    CORS_ORIGINS: list[str] = ["http://localhost:5173", "http://localhost:3000"]
-
-    VIDEO_OUTPUT_DIR: str = "output/videos"
-    AUDIO_OUTPUT_DIR: str = "output/audio"
+    CORS_ORIGINS: list[str] = [""]
 
     class Config:
         env_file = ".env"
