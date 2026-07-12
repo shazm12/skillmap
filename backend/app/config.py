@@ -6,10 +6,14 @@ class DevSettings(BaseSettings):
     APP_VERSION: str = "0.1.0"
 
     GROQ_API_KEY: str = ""
+    GROQ_MODEL: str = "openai/gpt-oss-20b"
 
-    # Qwen3 32B — quantized, reasoning-capable, low latency on Groq
-    # Groq model ID: https://console.groq.com/docs/models
-    GROQ_MODEL: str = "qwen/qwen3-32b"
+    LIVEKIT_URL: str = ""
+    LIVEKIT_API_KEY: str = ""
+    LIVEKIT_API_SECRET: str = ""
+
+    DEEPGRAM_API_KEY: str = ""
+    CARTESIA_API_KEY: str = ""
 
     CORS_ORIGINS: list[str] = ["http://localhost:5173", "http://localhost:3000"]
 
