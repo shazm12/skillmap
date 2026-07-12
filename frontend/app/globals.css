@@ -129,3 +129,12 @@
     @apply font-sans;
   }
 }
+
+/* LiveKit BarVisualizer — make bars match the theme primary color */
+.lk-visualizer-container .lk-audio-visualizer rect:first-child {
+  fill: transparent;
+}
+.lk-visualizer-container .lk-audio-visualizer rect:not(:first-child) {
+  fill: var(--primary);
+  opacity: 0.85;
+}
