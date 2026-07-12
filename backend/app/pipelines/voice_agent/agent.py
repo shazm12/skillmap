@@ -73,7 +73,7 @@ async def entrypoint(ctx: JobContext):
 
     session = AgentSession(
         stt=deepgram.STT(model="nova-3"),
-        llm=groq.LLM(model=settings.GROQ_MODEL, max_tokens=200),
+        llm=groq.LLM(model=settings.GROQ_MODEL, max_completion_tokens=200),
         tts=cartesia.TTS(),
         vad=ctx.proc.userdata["vad"],
         turn_detection=TurnDetector(),
