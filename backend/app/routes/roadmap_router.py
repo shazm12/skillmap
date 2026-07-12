@@ -15,8 +15,7 @@ async def generate_roadmap(request: RoadmapRequest, req: Request):
 
     async def token_stream():
         try:
-            in_thinking = False
-            buffer = ""
+            final_state = {}
 
             async for event in graph.astream_events(
                 {"prompt": request.prompt},
@@ -29,23 +28,14 @@ async def generate_roadmap(request: RoadmapRequest, req: Request):
                     chunk = event["data"]["chunk"]
                     if not chunk.content:
                         continue
+                    yield f"data: {json.dumps({'token': chunk.content})}\n\n"
 
-                    buffer += chunk.content
+                elif event["event"] == "on_chain_end" and event.get("name") == "LangGraph":
+                    final_state = event["data"].get("output", {})
 
-                    if not in_thinking:
-                        if "<think>" in buffer:
-                            pre = buffer[:buffer.index("<think>")]
-                            if pre:
-                                yield f"data: {json.dumps({'token': pre})}\n\n"
-                            buffer = ""
-                            in_thinking = True
-                        else:
-                            yield f"data: {json.dumps({'token': buffer})}\n\n"
-                            buffer = ""
-                    else:
-                        if "</think>" in buffer:
-                            buffer = buffer[buffer.index("</think>") + len("</think>"):]
-                            in_thinking = False
+            if final_state.get("should_continue") is False:
+                rejection = final_state.get("final_roadmap", "")
+                yield f"data: {json.dumps({'token': rejection, 'type': 'rejection'})}\n\n"
 
             yield "data: [DONE]\n\n"
 
