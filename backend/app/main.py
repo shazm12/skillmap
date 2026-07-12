@@ -8,6 +8,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.config import dev_settings as settings
 from app.pipelines.roadmap.graph import build_roadmap_graph
 from app.routes.roadmap_router import router as roadmap_router
+from app.routes.voice_router import router as voice_router
 
 
 @asynccontextmanager
@@ -16,7 +17,8 @@ async def lifespan(app: FastAPI):
 
     agent_proc = await asyncio.create_subprocess_exec(
         sys.executable,
-        "app/pipelines/voice_agent/agent.py",
+        "-m",
+        "app.pipelines.voice_agent.agent",
         "dev",
     )
     app.state.agent_process = agent_proc
@@ -42,6 +44,7 @@ app.add_middleware(
 
 
 app.include_router(roadmap_router, prefix="/api")
+app.include_router(voice_router, prefix="/api")
 
 @app.get("/health")
 async def health():
