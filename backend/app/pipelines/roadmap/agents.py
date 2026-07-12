@@ -5,6 +5,7 @@ from app.config import dev_settings as settings
 from app.pipelines.roadmap.schemas import (
     Curriculum,
     EmployeeProfile,
+    ProfileAnalystOutput,
     SubGoals,
 )
 
@@ -28,16 +29,23 @@ def _structured_llm(schema):
 
 class ProfileAnalystAgent:
     _prompt = """\
-You are a career profile extractor. Respond with valid JSON only.
-From the user's message, extract their current role, years of experience, \
-current skills, and career goal. Infer missing details reasonably.
+You are a career profile extractor and input validator. Respond with valid JSON only.
+
+First, decide if the user's message is genuinely about career development or \
+learning goals (role transitions, skill building, career growth). \
+Set should_continue to false and provide a rejection_reason for anything else — \
+general chat, coding questions, math problems, or any off-topic request.
+
+If should_continue is true, extract the profile. If false, set role, \
+years_experience, current_skills, and career_goal to empty/zero defaults.
 
 Return JSON with exactly these snake_case field names:
-{"role": str, "years_experience": int, "current_skills": [str], "career_goal": str}"""
+{"should_continue": bool, "rejection_reason": str, "role": str, \
+"years_experience": int, "current_skills": [str], "career_goal": str}"""
 
-    async def run(self, prompt: str) -> EmployeeProfile:
+    async def run(self, prompt: str) -> ProfileAnalystOutput:
         try:
-            llm = _structured_llm(EmployeeProfile)
+            llm = _structured_llm(ProfileAnalystOutput)
             return await llm.ainvoke([
                 SystemMessage(content=self._prompt),
                 HumanMessage(content=prompt),
@@ -50,10 +58,6 @@ class GoalStrategistAgent:
     _prompt = """\
 You are a career growth strategist. Respond with valid JSON only.
 Create a 6-month plan with monthly themes for the given employee profile.
-
-Return JSON with exactly these snake_case field names:
-{"career_path": str, "sub_goals": [{"month": int, "theme": str, "focus": str}]}
-
 
 Supported career paths and their progression arc:
 - Senior Software Engineer: system design → scalability → code quality → \
@@ -71,7 +75,11 @@ Pacing rules:
 - 5+ yrs exp: leadership, specialization, influence
 
 Each month must have one clear theme and a one-sentence focus. \
-Month N+1 must build on month N."""
+Month N+1 must build on month N.
+
+Return JSON with exactly these snake_case field names:
+{"career_path": str, "sub_goals": [{"month": int, "theme": str, "focus": str}]}
+"""
 
     async def run(self, profile: EmployeeProfile) -> SubGoals:
         try:
@@ -95,10 +103,6 @@ class CurriculumDesignerAgent:
 You are a curriculum designer for tech career development. Respond with valid JSON only.
 Design detailed learning modules for each month based on the sub-goals.
 
-Return JSON with exactly these snake_case field names:
-{"months": [{"month": int, "theme": str, "modules": [{"name": str, "topics": [str], "concepts": [str], "milestone": str}]}]}
-
-
 Knowledge map by career path (use as reference, not exhaustive):
 - Senior Software Engineer: distributed systems, SQL/NoSQL databases, REST & \
 GraphQL API design, testing strategies, CI/CD, system design patterns, \
@@ -118,7 +122,11 @@ Rules:
 - 3–5 topics per module, 3–5 key concepts per module
 - One concrete milestone per module (a project, deliverable, or assessment)
 - Junior profiles: more foundational modules; senior profiles: \
-more advanced, leadership-oriented modules"""
+more advanced, leadership-oriented modules
+
+Return JSON with exactly these snake_case field names:
+{"months": [{"month": int, "theme": str, "modules": [{"name": str, "topics": [str], "concepts": [str], "milestone": str}]}]}
+"""
 
     async def run(self, sub_goals: SubGoals, profile: EmployeeProfile) -> Curriculum:
         try:

@@ -5,6 +5,19 @@ class RoadmapRequest(BaseModel):
     prompt: str
 
 
+class ProfileAnalystOutput(BaseModel):
+    should_continue: bool = Field(
+        description="True if the prompt is about career development or learning goals. False if off-topic."
+    )
+    rejection_reason: str = Field(
+        description="If should_continue is False, a brief explanation why. Empty string if should_continue is True."
+    )
+    role: str = Field(description="Current job title or role")
+    years_experience: int = Field(description="Years of professional experience, infer if not stated")
+    current_skills: list[str] = Field(description="Current technical or domain skills")
+    career_goal: str = Field(description="Target role the person wants to reach")
+
+
 class EmployeeProfile(BaseModel):
     role: str = Field(description="Current job title or role")
     years_experience: int = Field(description="Years of professional experience, infer if not stated")
@@ -39,6 +52,3 @@ class MonthCurriculum(BaseModel):
 class Curriculum(BaseModel):
     months: list[MonthCurriculum] = Field(description="Exactly 6 months of curriculum")
 
-
-class RoadmapResponse(BaseModel):
-    markdown: str
