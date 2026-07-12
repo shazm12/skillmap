@@ -11,12 +11,7 @@ dependencies = [
     "langgraph==0.2.28",
     "langchain-groq==0.2.0",
     "langchain-core==0.3.10",
-    "moviepy==1.0.3",
-    "pillow==10.4.0",
-    "kokoro-onnx==0.4.0",
-    "soundfile==0.12.1",
-    "numpy>=2.0.2",
-    "python-dotenv==1.0.1",
+"python-dotenv==1.0.1",
     "livekit-agents[cartesia,deepgram,groq,silero]>=1.6.5",
 ]
 
