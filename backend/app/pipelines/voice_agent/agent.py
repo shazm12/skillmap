@@ -60,11 +60,15 @@ Rules for allowed questions — follow strictly:
 
 
 def prewarm(proc: JobProcess):
+    logger.info("Prewarm: loading Silero VAD")
     proc.userdata["vad"] = silero.VAD.load()
+    logger.info("Prewarm: Silero VAD loaded")
 
 
 async def entrypoint(ctx: JobContext):
+    logger.info("Job received — room: %r, job_id: %r", ctx.room.name, ctx.job.id)
     await ctx.connect()
+    logger.info("Agent connected to room: %r", ctx.room.name)
 
     def on_participant_disconnected(participant):
         logger.info("Participant disconnected: %s — session will close", participant.identity)
@@ -81,8 +85,9 @@ async def entrypoint(ctx: JobContext):
 
     try:
         await session.start(agent=TutorAgent(), room=ctx.room)
+        logger.info("AgentSession started successfully — room: %r", ctx.room.name)
     except Exception:
-        logger.exception("AgentSession failed to start")
+        logger.exception("AgentSession failed to start — room: %r", ctx.room.name)
         raise
 
 

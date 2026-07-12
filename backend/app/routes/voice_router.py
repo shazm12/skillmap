@@ -16,6 +16,7 @@ _AGENT_NAME = "SkillMap Tutor"
 @router.get("/token")
 async def get_voice_token():
     identity = f"user-{uuid.uuid4().hex[:8]}"
+    logger.info("Token requested — identity: %r, room: %r", identity, _ROOM_NAME)
     token = (
         AccessToken(settings.LIVEKIT_API_KEY, settings.LIVEKIT_API_SECRET)
         .with_identity(identity)
