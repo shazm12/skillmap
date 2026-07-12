@@ -10,9 +10,6 @@ wheels/
 # Virtual environments
 .venv/
 
-# uv
-uv.lock
-
 # Env
 .env
 
