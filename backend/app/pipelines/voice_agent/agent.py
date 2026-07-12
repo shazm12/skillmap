@@ -2,6 +2,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 from livekit.agents import Agent, AgentSession, JobContext, JobProcess, WorkerOptions, cli
+from livekit.agents.turn_detection import MultilingualModel
 from livekit.plugins import deepgram, groq, cartesia, silero
 
 
@@ -41,6 +42,7 @@ async def entrypoint(ctx: JobContext):
         llm=groq.LLM(model="qwen/qwen3-32b", max_tokens=200),
         tts=cartesia.TTS(),
         vad=ctx.proc.userdata["vad"],
+        turn_detection=MultilingualModel(),
     )
 
     await session.start(agent=TutorAgent(), room=ctx.room)
