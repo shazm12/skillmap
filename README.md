@@ -6,7 +6,7 @@ A multiagent career development platform for tech professionals. Describe your c
 
 ## What it does
 
-**Roadmap Generator** — Submit a career goal prompt (e.g. "I'm a junior backend engineer and want to become a senior in 12 months"). A multi-agent pipeline analyzes your profile, breaks the goal into milestones, designs a curriculum, and streams back a structured roadmap in real time.
+**Roadmap Generator** — Submit a career goal prompt (e.g. "I'm a junior backend engineer and want to become a senior"). A multi-agent pipeline analyzes your profile, breaks the goal into milestones, designs a curriculum, and streams back a structured 6-month roadmap in real time.
 
 **Voice Tutor** — A conversational AI tutor that answers questions about topics from your roadmap. Talks about software engineering, ML/AI, DevOps, product management, and tech leadership. Stays on topic — it redirects anything outside those domains.
 
