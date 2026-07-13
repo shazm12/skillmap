@@ -57,9 +57,10 @@ ProfileAnalyst → [guardrail] → GoalStrategist → CurriculumDesigner → Per
 - **ProfileAnalyst** — extracts role, experience, skills, and career goal from free-text. Rejects prompts outside supported paths (SWE, ML/AI, PM, Tech Lead).
 - **GoalStrategist** — breaks the goal into 6-month sub-goals.
 - **CurriculumDesigner** — maps sub-goals to learning topics with resources.
-- **Personalizer** — rewrites the curriculum to match the user's current skill level.
+- **Personalizer** — rewrites the curriculum in markdown to match the user's current skill level.
 
 Output streams token-by-token over SSE. Rejections send `"type": "rejection"` so the frontend renders an amber warning instead of a roadmap.
+> **Note:** The roadmap is generated in Markdown format, allowing our frontend to parse and render it with `react-markdown` for consistent, feature-rich formatting.
 
 ---
 
