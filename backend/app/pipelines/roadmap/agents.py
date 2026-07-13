@@ -57,7 +57,10 @@ Return JSON with exactly these snake_case field names:
 class GoalStrategistAgent:
     _prompt = """\
 You are a career growth strategist. Respond with valid JSON only.
-Create a 6-month plan with monthly themes for the given employee profile.
+
+CRITICAL RULE: You MUST always output exactly 6 sub-goals covering months 1, 2, 3, 4, 5, and 6. \
+Never fewer, never more. The user's stated timeline is irrelevant — always plan for a full 6-month program. \
+If they say "2 months" or "quickly", still produce all 6 months.
 
 Supported career paths and their progression arc:
 - Senior Software Engineer: system design → scalability → code quality → \
@@ -77,8 +80,8 @@ Pacing rules:
 Each month must have one clear theme and a one-sentence focus. \
 Month N+1 must build on month N.
 
-Return JSON with exactly these snake_case field names:
-{"career_path": str, "sub_goals": [{"month": int, "theme": str, "focus": str}]}
+Return JSON with exactly these snake_case field names and exactly 6 entries in sub_goals:
+{"career_path": str, "sub_goals": [{"month": 1, "theme": str, "focus": str}, {"month": 2, ...}, {"month": 3, ...}, {"month": 4, ...}, {"month": 5, ...}, {"month": 6, ...}]}
 """
 
     async def run(self, profile: EmployeeProfile) -> SubGoals:
@@ -88,7 +91,8 @@ Return JSON with exactly these snake_case field names:
                 f"Role: {profile.role}\n"
                 f"Experience: {profile.years_experience} years\n"
                 f"Skills: {', '.join(profile.current_skills)}\n"
-                f"Goal: {profile.career_goal}"
+                f"Goal: {profile.career_goal}\n"
+                f"Program duration: 6 months (always produce sub_goals for months 1 through 6)"
             )
             return await llm.ainvoke([
                 SystemMessage(content=self._prompt),
@@ -101,6 +105,11 @@ Return JSON with exactly these snake_case field names:
 class CurriculumDesignerAgent:
     _prompt = """\
 You are a curriculum designer for tech career development. Respond with valid JSON only.
+
+CRITICAL RULE: You MUST always output exactly 6 months of curriculum covering months 1, 2, 3, 4, 5, and 6. \
+Every month from the sub-goals you receive must have a corresponding entry. \
+Never skip a month or output fewer than 6.
+
 Design detailed learning modules for each month based on the sub-goals.
 
 Knowledge map by career path (use as reference, not exhaustive):
@@ -118,14 +127,14 @@ team topologies, agile/scrum facilitation, performance reviews, \
 incident management, DORA metrics, engineering culture, hiring
 
 Rules:
-- 2–3 modules per month
+- 2–3 modules per month, for all 6 months
 - 3–5 topics per module, 3–5 key concepts per module
 - One concrete milestone per module (a project, deliverable, or assessment)
 - Junior profiles: more foundational modules; senior profiles: \
 more advanced, leadership-oriented modules
 
-Return JSON with exactly these snake_case field names:
-{"months": [{"month": int, "theme": str, "modules": [{"name": str, "topics": [str], "concepts": [str], "milestone": str}]}]}
+Return JSON with exactly these snake_case field names and exactly 6 entries in months:
+{"months": [{"month": 1, "theme": str, "modules": [...]}, {"month": 2, ...}, {"month": 3, ...}, {"month": 4, ...}, {"month": 5, ...}, {"month": 6, ...}]}
 """
 
     async def run(self, sub_goals: SubGoals, profile: EmployeeProfile) -> Curriculum:
@@ -138,7 +147,8 @@ Return JSON with exactly these snake_case field names:
             content = (
                 f"Profile: {profile.role}, {profile.years_experience} yrs exp, "
                 f"goal: {profile.career_goal}\n"
-                f"Career path: {sub_goals.career_path}\n\n"
+                f"Career path: {sub_goals.career_path}\n"
+                f"Program duration: 6 months — produce curriculum for ALL 6 months listed below\n\n"
                 f"Monthly themes:\n{monthly_plan}"
             )
             return await llm.ainvoke([
