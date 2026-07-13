@@ -11,7 +11,7 @@ from app.config import dev_settings as settings
 
 logger = logging.getLogger(__name__)
 
-_MIN_TRANSCRIPT_CHARS = 3
+_MIN_TRANSCRIPT_CHARS = 2
 
 
 class TutorAgent(Agent):
