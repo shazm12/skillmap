@@ -132,3 +132,15 @@ npm run dev            # http://localhost:3000
 
 > **Note:** `CORS_ORIGINS` in `.env` must be a JSON array if set:
 > `CORS_ORIGINS=["http://localhost:3000"]`
+
+---
+
+## Tradeoffs and Future improvements
+
+**Observability** — Add Langfuse via a LangChain callback to get per-agent traces, token costs, and latency for every pipeline run. Currently there's no visibility into which agent node is slow or where structured output failures happen most.
+
+**Service separation** — The roadmap pipeline and voice worker share one process today. Splitting them into separate services allows independent scaling (voice is far more resource-intensive), independent deployment, and fault isolation so a voice crash doesn't affect roadmap generation.
+
+**Roadmap persistence + tutor linkage** — Roadmaps are ephemeral — nothing is saved between sessions. Adding a persistence layer (Postgres/Mongo) and injecting the user's actual roadmap into the tutor agent's system prompt at session start would turn the tutor from a generic coach into one that knows exactly what career path is designated to user and what topics and modules would user ask queries from.
+
+**Noise cancellation before VAD** — Silero VAD processes raw audio, making it sensitive to background noise. Two options: 1. Adding `livekit-plugins-noise-cancellation` as a pre-processing step removes noise before the signal reaches the VAD, reducing false positives without replacing the VAD model; 2. Use better VAD models like Picovoice Cobra or Nvidia NeMo VAD if we ship for an enterprise.
