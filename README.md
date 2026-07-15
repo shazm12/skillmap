@@ -72,7 +72,7 @@ User mic → Deepgram STT → Silero VAD → TurnDetector → Groq LLM → Carte
 
 - **Silero VAD** — prewarmed on startup, filters noise from actual speech.
 - **TurnDetector** — decides when the user has finished speaking before forwarding to LLM.
-- **Empty transcript guard** — transcripts shorter than 3 chars are dropped; agent asks the user to repeat instead of sending garbage to the LLM.
+- **Empty transcript guard** — transcripts shorter than 2 chars are dropped; agent asks the user to repeat instead of sending garbage to the LLM.
 - **Topic guardrail** — baked into the system prompt; the agent refuses non-technical questions with a fixed redirect message.
 - **Participant disconnect handler** — logs when the user leaves so the session closes cleanly.
 
