@@ -60,7 +60,7 @@ export default function RoadmapChat() {
         }
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Something went wrong')
+      setError('Something went wrong, Please try again later.')
     } finally {
       setLoading(false)
     }
@@ -82,7 +82,7 @@ export default function RoadmapChat() {
             <p className="text-2xl font-semibold text-foreground">Generate your roadmap</p>
             <p className="max-w-md text-sm text-muted-foreground">
               Tell me about your current role, experience, and where you want to go.
-              I'll build you a personalized 6-month learning plan.
+              I'll build you a personalized learning plan.
             </p>
           </div>
         )}
