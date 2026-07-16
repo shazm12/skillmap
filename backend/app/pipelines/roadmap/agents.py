@@ -19,12 +19,20 @@ def _llm() -> ChatGroq:
     return ChatGroq(
         model=settings.GROQ_MODEL,
         api_key=settings.GROQ_API_KEY,
+        temperature=0,
     )
 
 
 def _structured_llm(schema):
-    # json_mode is more reliable than tool calling for Qwen3 on Groq
-    return _llm().with_structured_output(schema, method="json_mode")
+    # temperature=0 reduces schema deviation; with_retry absorbs remaining transient failures
+    llm = ChatGroq(
+        model=settings.GROQ_MODEL,
+        api_key=settings.GROQ_API_KEY,
+        temperature=0,
+    )
+    return llm.with_structured_output(schema, method="json_mode").with_retry(
+        stop_after_attempt=3
+    )
 
 
 class ProfileAnalystAgent:
