@@ -1,12 +1,12 @@
 # SkillMap
 
-A multiagent career development platform for tech professionals. Describe your current role and goals — SkillMap builds a personalized 6-month learning roadmap and gives you a voice-powered tutor to work through it.
+A multiagent career development platform for tech professionals. Describe your current role and goals — SkillMap builds a personalized learning roadmap and gives you a voice-powered tutor to work through it.
 
 ---
 
 ## What it does
 
-**Roadmap Generator** — Submit a career goal prompt (e.g. "I'm a junior backend engineer and want to become a senior"). A multi-agent pipeline analyzes your profile, breaks the goal into milestones, designs a curriculum, and streams back a structured 6-month roadmap in real time.
+**Roadmap Generator** — Submit a career goal prompt (e.g. "I'm a junior backend engineer and want to become a senior"). A multi-agent pipeline analyzes your profile, breaks the goal into milestones, designs a curriculum, and streams back a structured learning roadmap in real time.
 
 **Voice Tutor** — A conversational AI tutor that answers questions about topics from your roadmap. Talks about software engineering, ML/AI, DevOps, product management, and tech leadership. Stays on topic — it redirects anything outside those domains.
 
@@ -55,7 +55,7 @@ ProfileAnalyst → [guardrail] → GoalStrategist → CurriculumDesigner → Per
 ```
 
 - **ProfileAnalyst** — extracts role, experience, skills, and career goal from free-text. Rejects prompts outside supported paths (SWE, ML/AI, PM, Tech Lead).
-- **GoalStrategist** — breaks the goal into 6-month sub-goals.
+- **GoalStrategist** — breaks the goal into sub-goals of 3 to 9 months based on YOE and skills level.
 - **CurriculumDesigner** — maps sub-goals to learning topics with resources.
 - **Personalizer** — rewrites the curriculum in markdown to match the user's current skill level.
 
