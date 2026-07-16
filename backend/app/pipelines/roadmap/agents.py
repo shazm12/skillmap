@@ -134,7 +134,8 @@ Rules:
 more advanced, leadership-oriented modules
 
 Return JSON with exactly these snake_case field names and exactly 6 entries in months:
-{"months": [{"month": 1, "theme": str, "modules": [...]}, {"month": 2, ...}, {"month": 3, ...}, {"month": 4, ...}, {"month": 5, ...}, {"month": 6, ...}]}
+{"months": [{"month": 1, "theme": str, "modules": [{"name": str, "topics": [str, str, str], "concepts": [str, str, str], "milestone": str}, {"name": str, "topics": [...], "concepts": [...], "milestone": str}]}, {"month": 2, ...}, {"month": 3, ...}, {"month": 4, ...}, {"month": 5, ...}, {"month": 6, ...}]}
+Each module must contain exactly these fields: "name" (str), "topics" (list of 3–5 strings), "concepts" (list of 3–5 strings), "milestone" (str). Include 2–3 modules per month.
 """
 
     async def run(self, sub_goals: SubGoals, profile: EmployeeProfile) -> Curriculum:
