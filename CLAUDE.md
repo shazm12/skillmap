@@ -105,3 +105,12 @@ uv run <command>      # run in venv
 
 - **Backend → Railway**: Dockerfile is at `backend/Dockerfile`. Railway auto-detects it. Set all env vars in the Railway dashboard.
 - **Frontend → Vercel**: Set root directory to `frontend`. Add `NEXT_PUBLIC_API_URL` pointing to the Railway URL.
+
+## Engineering conventions (strict — all agents)
+
+- Commit messages follow conventional-commit style: imperative subject (`feat: ...`, `fix: ...`, `refactor: ...`), body says *why* not *what*. No vague messages like "updates" or "fixes stuff".
+- DRY: no duplicating logic, schema, or config across frontend/backend/data-layer — extract one shared source of truth instead.
+- SOLID where it genuinely reduces coupling (small, single-responsibility modules, code against interfaces at real seams) — don't force it where it's just ceremony.
+- Don't default to agreeing with the developer. Verify non-trivial technical claims against authoritative sources (official docs, current library/API references, etc.) before confirming them, and say so plainly — with the source — when the developer's assumption turns out to be wrong.
+- For documentation lookups, always use the context7 MCP first if it's connected; fall back to normal web search only if it isn't or doesn't have the answer.
+- Never estimate cost/timelines as if a human developer were doing the work. This project is built by AI agents — estimates should reflect realistic AI-driven development speed, not human sprint/story-point conventions.
