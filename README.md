@@ -67,7 +67,7 @@ Output streams token-by-token over SSE. Rejections send `"type": "rejection"` so
 ## Voice agent pipeline
 
 ```
-User mic → Deepgram STT → Silero VAD → TurnDetector → Groq LLM → Cartesia TTS → Speaker
+User mic → Silero VAD → Deepgram STT → TurnDetector → Groq LLM → Cartesia TTS → Speaker
 ```
 
 - **Silero VAD** — prewarmed on startup, filters noise from actual speech.
