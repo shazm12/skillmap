@@ -26,7 +26,7 @@ class EmployeeProfile(BaseModel):
 
 
 class MonthlySubGoal(BaseModel):
-    month: int = Field(description="Month number, 1 through 6", ge=1, le=6)
+    month: int = Field(description="Month number starting from 1", ge=1)
     theme: str = Field(description="Short theme title, e.g. 'ML Fundamentals'")
     focus: str = Field(description="One sentence describing the key focus for this month")
 
@@ -34,9 +34,9 @@ class MonthlySubGoal(BaseModel):
 class SubGoals(BaseModel):
     career_path: str = Field(description="One of: Senior Software Engineer, ML/AI Engineer, Product Manager, Tech Lead")
     sub_goals: list[MonthlySubGoal] = Field(
-        description="Exactly 6 monthly sub-goals, one per month, covering months 1 through 6",
-        min_length=6,
-        max_length=6,
+        description="3 to 9 monthly sub-goals based on goal complexity and experience level",
+        min_length=3,
+        max_length=9,
     )
 
 
@@ -48,7 +48,7 @@ class TopicModule(BaseModel):
 
 
 class MonthCurriculum(BaseModel):
-    month: int = Field(description="Month number, 1 through 6", ge=1, le=6)
+    month: int = Field(description="Month number starting from 1", ge=1)
     theme: str = Field(description="Month theme, matching the sub-goal theme")
     modules: list[TopicModule] = Field(
         description="2 to 3 learning modules for this month",
@@ -59,8 +59,8 @@ class MonthCurriculum(BaseModel):
 
 class Curriculum(BaseModel):
     months: list[MonthCurriculum] = Field(
-        description="Exactly 6 months of curriculum, covering months 1 through 6",
-        min_length=6,
-        max_length=6,
+        description="3 to 9 months of curriculum matching the sub-goals, one entry per month",
+        min_length=3,
+        max_length=9,
     )
 
