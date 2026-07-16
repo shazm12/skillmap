@@ -58,9 +58,10 @@ class GoalStrategistAgent:
     _prompt = """\
 You are a career growth strategist. Respond with valid JSON only.
 
-CRITICAL RULE: You MUST always output exactly 6 sub-goals covering months 1, 2, 3, 4, 5, and 6. \
-Never fewer, never more. The user's stated timeline is irrelevant — always plan for a full 6-month program. \
-If they say "2 months" or "quickly", still produce all 6 months.
+Generate between 3 and 9 monthly sub-goals based on the complexity of the career goal \
+and the user's starting experience level. A simple lateral move or already-senior profile \
+may need 3–4 months; a major transition or junior starting point needs 6–9 months. \
+Let the profile drive the length — do not pad or compress artificially.
 
 Supported career paths and their progression arc:
 - Senior Software Engineer: system design → scalability → code quality → \
@@ -73,15 +74,15 @@ stakeholder management → metrics & growth → strategy
 → delivery & execution → people skills → org influence
 
 Pacing rules:
-- <2 yrs exp: fundamentals first, build confidence
+- <2 yrs exp: fundamentals first, build confidence — lean toward more months
 - 2–5 yrs exp: deepen expertise, add breadth
-- 5+ yrs exp: leadership, specialization, influence
+- 5+ yrs exp: leadership, specialization, influence — fewer months needed
 
 Each month must have one clear theme and a one-sentence focus. \
 Month N+1 must build on month N.
 
-Return JSON with exactly these snake_case field names and exactly 6 entries in sub_goals:
-{"career_path": str, "sub_goals": [{"month": 1, "theme": str, "focus": str}, {"month": 2, ...}, {"month": 3, ...}, {"month": 4, ...}, {"month": 5, ...}, {"month": 6, ...}]}
+Return JSON with exactly these snake_case field names:
+{"career_path": str, "sub_goals": [{"month": 1, "theme": str, "focus": str}, {"month": 2, "theme": str, "focus": str}, ...]}
 """
 
     async def run(self, profile: EmployeeProfile) -> SubGoals:
@@ -92,7 +93,7 @@ Return JSON with exactly these snake_case field names and exactly 6 entries in s
                 f"Experience: {profile.years_experience} years\n"
                 f"Skills: {', '.join(profile.current_skills)}\n"
                 f"Goal: {profile.career_goal}\n"
-                f"Program duration: 6 months (always produce sub_goals for months 1 through 6)"
+                f"Choose the right number of months (3–9) based on how far this person needs to go."
             )
             return await llm.ainvoke([
                 SystemMessage(content=self._prompt),
@@ -106,11 +107,9 @@ class CurriculumDesignerAgent:
     _prompt = """\
 You are a curriculum designer for tech career development. Respond with valid JSON only.
 
-CRITICAL RULE: You MUST always output exactly 6 months of curriculum covering months 1, 2, 3, 4, 5, and 6. \
-Every month from the sub-goals you receive must have a corresponding entry. \
-Never skip a month or output fewer than 6.
-
-Design detailed learning modules for each month based on the sub-goals.
+Design detailed learning modules for every month listed in the sub-goals you receive. \
+Produce one curriculum entry per sub-goal month — no more, no fewer. \
+The number of months is already decided; your job is to fill each one with content.
 
 Knowledge map by career path (use as reference, not exhaustive):
 - Senior Software Engineer: distributed systems, SQL/NoSQL databases, REST & \
@@ -127,15 +126,15 @@ team topologies, agile/scrum facilitation, performance reviews, \
 incident management, DORA metrics, engineering culture, hiring
 
 Rules:
-- 2–3 modules per month, for all 6 months
+- 2–3 modules per month
 - 3–5 topics per module, 3–5 key concepts per module
 - One concrete milestone per module (a project, deliverable, or assessment)
 - Junior profiles: more foundational modules; senior profiles: \
 more advanced, leadership-oriented modules
 
-Return JSON with exactly these snake_case field names and exactly 6 entries in months:
-{"months": [{"month": 1, "theme": str, "modules": [{"name": str, "topics": [str, str, str], "concepts": [str, str, str], "milestone": str}, {"name": str, "topics": [...], "concepts": [...], "milestone": str}]}, {"month": 2, ...}, {"month": 3, ...}, {"month": 4, ...}, {"month": 5, ...}, {"month": 6, ...}]}
-Each module must contain exactly these fields: "name" (str), "topics" (list of 3–5 strings), "concepts" (list of 3–5 strings), "milestone" (str). Include 2–3 modules per month.
+Return JSON with exactly these snake_case field names:
+{"months": [{"month": 1, "theme": str, "modules": [{"name": str, "topics": [str, str, str], "concepts": [str, str, str], "milestone": str}, {"name": str, "topics": [...], "concepts": [...], "milestone": str}]}, {"month": 2, ...}, ...]}
+Each module must contain exactly these fields: "name" (str), "topics" (list of 3–5 strings), "concepts" (list of 3–5 strings), "milestone" (str).
 """
 
     async def run(self, sub_goals: SubGoals, profile: EmployeeProfile) -> Curriculum:
@@ -149,7 +148,7 @@ Each module must contain exactly these fields: "name" (str), "topics" (list of 3
                 f"Profile: {profile.role}, {profile.years_experience} yrs exp, "
                 f"goal: {profile.career_goal}\n"
                 f"Career path: {sub_goals.career_path}\n"
-                f"Program duration: 6 months — produce curriculum for ALL 6 months listed below\n\n"
+                f"Produce curriculum for exactly these {len(sub_goals.sub_goals)} months:\n\n"
                 f"Monthly themes:\n{monthly_plan}"
             )
             return await llm.ainvoke([
@@ -167,7 +166,7 @@ Render the curriculum as a clean, scannable Markdown document. \
 Return ONLY the markdown — no preamble, no explanation.
 
 Required format:
-# 6-Month Roadmap: {career_goal}
+# Career Roadmap: {career_goal}
 > {role} · {years_experience} years experience
 
 ---
