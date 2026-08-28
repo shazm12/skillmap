@@ -25,8 +25,14 @@ async def lifespan(app: FastAPI):
 
     yield
 
-    agent_proc.terminate()
-    await agent_proc.wait()
+    try:
+        if agent_proc.poll() is None:
+            agent_proc.terminate()
+            agent_proc.wait(timeout=5)
+    except (ProcessLookupError, OSError):
+        pass
+    except Exception as e:
+        print(f"Error terminating the agent process: {e}")
 
 app = FastAPI(
     title=settings.APP_NAME,
