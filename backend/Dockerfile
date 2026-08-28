@@ -11,6 +11,8 @@ COPY pyproject.toml uv.lock ./
 
 RUN uv sync --frozen --no-dev
 
+RUN pip install ruff
+
 COPY app/ ./app/
 
 EXPOSE 8000
